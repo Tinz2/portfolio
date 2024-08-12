@@ -65,6 +65,9 @@ flutter:
     - assets/normal.png
     - assets/oversize.jpg
     - assets/thin.jpg
+    - assets/logokal.png
+    - assets/bgkal.jpg
+    - assets/bgkal2.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

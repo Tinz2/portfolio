@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Map<String, dynamic>> extractedValuesRadio = [];
   String selectedValueRadio = ''; // เพื่อเก็บค่าที่เลือก
   String selectedTextRadio = ''; // เพื่อเก็บข้อความที่เลือก
-  int totalcal = 0;
+  int totalcal = 0;  // แก้ไขตรงนี้
   String showtotalcal = '';
   int remainingCalories = 0;
   String remainingCaloriesText = '';
@@ -95,20 +95,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void updateSelectedText(String name, int cal) {
-    List<String> selectedItems = [];
-    totalcal = 0; // Reset totalcal before recalculating
-    extractedValues.forEach((item) {
-      if (item['selected']) {
-        selectedItems.add('อาหาร: ${item['name']}, แคลอรี: ${item['cal']}');
-        totalcal += cal; // Use item['cal'] instead of cal parameter
-      }
-    });
+    List<String> selectedItems = [];    
+    totalcal += cal; // เพิ่มค่าของแคลอรีแทนการรีเซ็ตเป็น 0
+
+    // ตรวจสอบว่าค่าของ name ใน values2 ไม่เป็น null
+    if (values2[name] != null) {
+        values2[name]!['selected'] = true; // แก้สถานะให้ถูกเลือก
+    }
+
+    extractedValues = extractValues(values2); // อัพเดทค่าจาก Map
+
+    selectedItems.add(name); // เพิ่มชื่ออาหารที่ถูกเลือกในลิสต์
+
+    String selectedItemsText = selectedItems.join(", ");
+    showtotalcal = totalcal.toString(); // แสดงค่าของแคลอรีที่รวมทั้งหมด
+
     setState(() {
-      selectedText = selectedItems.join('\n');
-      showtotalcal = 'ปริมาณแคลอรีที่ท่านทานทั้งหมด: $totalcal';
-      calculateRemainingCalories();
+        selectedText = "อาหารที่เลือก: $selectedItemsText";
+        calculateRemainingCalories(); // คำนวณแคลอรีที่เหลือ
     });
-  }
+}
+
 
   Map<String, bool> values = {
     'ดูหนัง': false,
@@ -149,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
       extractedValues.forEach((item) {
         item['selected'] = false;
       });
-      totalcal = 0;
+      totalcal = 0; // Reset totalcal to 0
       selectedText = '';
       showtotalcal = '';
       remainingCalories = 0;
